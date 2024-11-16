@@ -1,0 +1,30 @@
+# Node.js modules
+node_modules/
+
+# Variables d'environnement
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Systèmes d'exploitation
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# Dossiers spécifiques à l'éditeur
+.idea/         # WebStorm, IntelliJ
+.vscode/       # Visual Studio Code
+*.swp          # Vim swap files
+*.suo          # Visual Studio
+*.sln          # Visual Studio
+
+# Fichiers de builds
+dist/
+build/
+
+# Cache
+.cache/
