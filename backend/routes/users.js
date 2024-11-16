@@ -9,3 +9,5 @@ const { signup } = require("../controllers/usersController");
 
 // Route signup : création d'un compte utilisateur
 router.post("/signup", signup);
+
+module.exports = router;

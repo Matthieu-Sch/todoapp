@@ -1,5 +1,5 @@
 // Charge les variables d'environnement depuis le fichier .env pour sécuriser les informations sensibles
-require("dotenv").config;
+require("dotenv").config();
 
 // Importe le module Express pour créer et configurer le serveur
 const express = require("express");
@@ -21,6 +21,9 @@ const logger = require("morgan");
 
 // Importe le routeur principal (indexRouter) pour gérer les routes de base
 const indexRouter = require("./routes/index");
+
+// Importe le routeur userRouter
+const userRouter = require("./routes/users");
 
 // Importe et utilise cors pour autoriser les requêtes cross-origin (utile si ton frontend est sur un domaine différent)
 const cors = require("cors");
@@ -45,6 +48,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Utilise le routeur pour les routes à la racine ("/")
 app.use("/", indexRouter);
+
+//Utilise le routeur pour les routes sur avec l'extension "/user"
+app.use("/user", userRouter);
 
 // Exporte l'application pour l'utiliser dans d'autres fichiers (comme server.js)
 module.exports = app;
