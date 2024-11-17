@@ -4,10 +4,20 @@ const router = express.Router();
 
 require("../models/connection");
 
-// Importation de la constant signup détenant la logique de création utilisateur
-const { signup } = require("../controllers/usersController");
+// Importation de la constant signup détenant la logique de création utilisateu
+const { signup, signin, signout } = require("../controllers/usersController");
 
-// Route signup : création d'un compte utilisateur
+/******************************************************
+                       ROUTES
+ ******************************************************/
+
+// Routes signup : création d'un compte utilisateur
 router.post("/signup", signup);
+
+// Route signin : connexion utilisateur
+router.post("/signin", signin);
+
+//Route signout : déconnexion utilisateur
+router.delete("/signout", signout);
 
 module.exports = router;

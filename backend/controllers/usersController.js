@@ -1,4 +1,5 @@
 const User = require("../models/users");
+const messages = require("../utils/messages");
 const { checkEmptyFields } = require("../modules/checkEmptyFields");
 const bcrypt = require("bcrypt");
 const uid2 = require("uid2");
@@ -16,56 +17,34 @@ const signup = async (req, res) => {
 
     const signupFields = { email, username, password, confirmPassword };
 
+    // Vérification du remplissage des champs
     if (checkEmptyFields(signupFields)) {
       console.log("Au moins un champs est vide.");
-      return res.json({
-        result: false,
-        emptyField: "Please fill all the fileds",
-      });
+      return res.json(messages.signupEmptyFields);
     }
 
     if (!emailRegexp.test(email)) {
-      return res.json({ valid: false, regexEmail: "Please enter valid email" });
+      return res.json(messages.emailRegex);
     }
 
     if (!passwordRegexp.test(password)) {
-      return res.json({
-        valid: false,
-        regexPassword: "Your password must contain at least ...",
-      });
+      return res.json(messages.passwordRegex);
     }
 
     // Vérification de l'existance de l'email
     const emailExists = await User.findOne({ email });
     if (emailExists) {
-      return res.json({
-        result: false,
-        message: "This email is already used. Please use another one.",
-      });
+      return res.json(messages.emailAlreadyUsed);
     }
     // Vérification de l'existance du username
     const usernameExists = await User.findOne({ username });
     if (usernameExists) {
-      return res.json({
-        result: false,
-        message: "This username is already used. Please use another one.",
-      });
-    }
-
-    // Vérification de la longueur du mot de passe (minimum 8 caractères)
-    if (password.length < 8 || password.length > 16) {
-      return res.json({
-        result: false,
-        message: "Your password must contain between 8 and 16 caracters.",
-      });
+      return res.json(messages.usernameAlreadyUsed);
     }
 
     // Vérification de la concordance des 2 mots de passe
     if (password !== confirmPassword) {
-      return res.json({
-        result: false,
-        passwordFailed: "Your password do not match",
-      });
+      return res.json(messages.passwordMatch);
     }
 
     // Hashage du mot de passe via bcrypt
@@ -80,37 +59,65 @@ const signup = async (req, res) => {
     });
 
     await newUser.save();
-    res.json({
-      result: true,
-      success: "Your account have been created.",
-      token: newUser.token,
-    });
+    res.json({ ...messages.signupSuccess, token: newUser.token });
   } catch (error) {
     // Gestion des erreurs inattendues
     console.error("Error during signup:", error.message);
-    res.status(500).json({
-      result: false,
-      message: "An unexpected error occurred. Please try again later.",
-    });
+    res.status(500).json(messages.catchError);
   }
 };
 
 // Création de la logique de connexion
 const signin = async (req, res) => {
   try {
-    const { password, token } = req.body;
+    const { email, password } = req.body;
 
-    const userExists = await User.findOne(token);
+    const signinFields = { email, password };
 
-    if (userExists && bcrypt.compareSync(password, userExists.password)) {
-      return res.json({ result: true, token: userExists.token });
-    } else {
-      return res.json({
-        result: false,
-        error: "User not found or wrong password.",
-      });
+    // Vérification du remplissage des champs
+    if (checkEmptyFields(signinFields)) {
+      return res.json(messages.signinEmptyFields);
     }
-  } catch (error) {}
+
+    // Vérification de l'existance de l'utilisateur
+    const userExists = await User.findOne({ email });
+
+    const isPasswordValid = await bcrypt.compareSync(
+      password,
+      userExists.password
+    );
+    if (!isPasswordValid) {
+      return res.json(messages.errorSignin);
+    }
+
+    // Création d'un nouveau token
+    userExists.token = uid2(32);
+    userExists.save();
+    return res.json({ ...messages.signinSuccess, token: userExists.token });
+  } catch (error) {
+    console.error("Error during signin:", error.message);
+    res.status(500).json(messages.catchError);
+  }
 };
 
-module.exports = { signup, signin };
+const signout = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    // Vérification de la validité ou de l'existence du token
+    const userTokenValid = await User.findOne({ token });
+    if (!userTokenValid) {
+      return res.json(messages.invalidToken);
+    }
+
+    // Si le token est existe, on l'efface et on enregistre dans la table user
+    userTokenValid.token = null;
+    await userTokenValid.save();
+    return res.json(messages.signoutSuccess);
+  } catch (error) {
+    console.error("Error during signin:", error.message);
+    res.status(500).json(messages.catchError);
+  }
+};
+
+module.exports = { signup, signin, signout };
