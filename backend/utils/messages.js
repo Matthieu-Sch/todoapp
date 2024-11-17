@@ -1,4 +1,7 @@
 module.exports = {
+  /******************************************************
+                         Controlleur Users
+   ******************************************************/
   // Messages signup DEBUT
   signupEmptyFields: {
     result: false,
@@ -72,6 +75,44 @@ module.exports = {
     message: "You've been successfully signed out.",
   },
   // Messages signout FIN
+
+  /******************************************************
+              Middleware Authentification
+ ******************************************************/
+
+  // Messages authentificationWithToken DEBUT
+  noToken: {
+    result: false,
+    key: "noToken",
+    message: "no token provided",
+  },
+  //Commenté car définit dans signout
+  // invalidToken: {
+  //   result: false,
+  //   key: "tokenInvalid",
+  //   message: "Invalid or expired token",
+  // },
+  // Messages authentificationWithToken FIN
+
+  /******************************************************
+                  Catch Error global
+ ******************************************************/
+
+  /******************************************************
+                    Controlleur Tasks
+ ******************************************************/
+  // Message createTask DEBUT
+  noTitle: {
+    result: false,
+    key: "noTitle",
+    message: "Title is mandatory",
+  },
+  taskCreateSuccessfully: {
+    result: true,
+    key: "taskCreateSuccessfully",
+    message: "Your task have been created.",
+  },
+  // Message createTask FIN
 
   // Messages catch erreur DEBUT
   catchError: {

@@ -25,6 +25,9 @@ const indexRouter = require("./routes/index");
 // Importe le routeur userRouter
 const userRouter = require("./routes/users");
 
+// Importe le routeur userRouter
+const taskRouter = require("./routes/tasks");
+
 // Importe et utilise cors pour autoriser les requêtes cross-origin (utile si ton frontend est sur un domaine différent)
 const cors = require("cors");
 
@@ -49,8 +52,11 @@ app.use(express.static(path.join(__dirname, "public")));
 // Utilise le routeur pour les routes à la racine ("/")
 app.use("/", indexRouter);
 
-//Utilise le routeur pour les routes sur avec l'extension "/user"
+//Utilise le routeur pour les routes avec l'extension "/user"
 app.use("/user", userRouter);
+
+//Utilise le routeur pour les routes avec l'extension "/tasks"
+app.use("/tasks", taskRouter);
 
 // Exporte l'application pour l'utiliser dans d'autres fichiers (comme server.js)
 module.exports = app;

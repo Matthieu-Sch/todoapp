@@ -81,11 +81,11 @@ const signin = async (req, res) => {
 
     // Vérification de l'existance de l'utilisateur
     const userExists = await User.findOne({ email });
+    if (!userExists) {
+      return res.json(messages.errorSignin);
+    }
 
-    const isPasswordValid = await bcrypt.compareSync(
-      password,
-      userExists.password
-    );
+    const isPasswordValid = bcrypt.compareSync(password, userExists.password);
     if (!isPasswordValid) {
       return res.json(messages.errorSignin);
     }
