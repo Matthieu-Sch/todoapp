@@ -49,7 +49,7 @@ module.exports = {
   signinEmptyFields: {
     result: false,
     key: "signinEmptyFields",
-    message: "An unexpected error occurred. Please try again later.",
+    message: "Please fill all the fields.",
   },
   signinSuccess: {
     result: true,
@@ -95,13 +95,9 @@ module.exports = {
   // Messages authentificationWithToken FIN
 
   /******************************************************
-                  Catch Error global
- ******************************************************/
-
-  /******************************************************
                     Controlleur Tasks
  ******************************************************/
-  // Message createTask DEBUT
+  // Messages createTask DEBUT
   noTitle: {
     result: false,
     key: "noTitle",
@@ -112,7 +108,19 @@ module.exports = {
     key: "taskCreateSuccessfully",
     message: "Your task have been created.",
   },
-  // Message createTask FIN
+  // Messages createTask FIN
+
+  // Message getTasks DEBUT
+  noTaskFound: {
+    result: false,
+    key: "noTaskFound",
+    message: "No task found.",
+  },
+  // Message getTasks FIN
+
+  /******************************************************
+                  Catch Error global
+ ******************************************************/
 
   // Messages catch erreur DEBUT
   catchError: {

@@ -33,7 +33,13 @@ const createTask = async (req, res) => {
 const getTasks = async (req, res) => {
   try {
     const userId = req.user._id;
+
+    // Récupération de la tâche lié à l'utilisateur puis filtrage de la plus récente à la plus ancienne
     const tasks = await Task.find({ userId }).sort({ createdAt: -1 });
+    if (!tasks) {
+      res.json(messages.noTaskFound);
+    }
+
     return res.json({ result: true, tasks });
   } catch (error) {
     console.error("Error creating task:", error.message);
