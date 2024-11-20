@@ -1,13 +1,16 @@
 import "../styles/globals.css";
 import Head from "next/head";
+import Layout from "../components/Layout/Layout";
 
 function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Next.js App</title>
+        <title>Todo App</title>
       </Head>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </>
   );
 }

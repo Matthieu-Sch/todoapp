@@ -3,7 +3,7 @@ const messages = require("../utils/messages");
 
 const authentificationWithToken = async (req, res, next) => {
   try {
-    const { token } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
     // console.log("Token reçu :", token);
 
     // Vérification de l'existence d'un token
