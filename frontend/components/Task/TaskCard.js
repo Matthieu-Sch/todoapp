@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function TaskCart() {
   const apiFetch = "http://localhost:3000/tasks";
-  const token = "RYJYtw5ByEqVEtxZ2WiwU_kXaqd7Ncu7"; // Remplacez par un token valide
+  const token = "RYJYtw5ByEqVEtxZ2WiwU_kXaqd7Ncu7";
   const [tasks, setTasks] = useState([]);
 
   const fetchTasks = async () => {
