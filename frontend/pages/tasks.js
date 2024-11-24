@@ -1,10 +1,10 @@
-import TaskCard from "../components/Task/TaskCard";
+import TaskList from "../components/Task/TaskList";
 import TaskForm from "../components/Task/TaskForm";
 
-export default function Task({ Component, pageProps }) {
+export default function Task() {
   return (
     <div className="w-full">
-      <TaskCard />
+      <TaskList />
       <TaskForm />
     </div>
   );
