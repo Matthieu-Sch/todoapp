@@ -4,7 +4,11 @@ const router = express.Router();
 require("../models/connection");
 
 // Importation de la constant signup détenant la logique de création utilisateu
-const { createTask, getTasks } = require("../controllers/tasksController");
+const {
+  createTask,
+  getTasks,
+  deleteTask,
+} = require("../controllers/tasksController");
 const {
   authentificationWithToken,
 } = require("../middlewares/authentificationWithToken");
@@ -20,5 +24,6 @@ router.post("/createTask", authentificationWithToken, createTask);
 router.get("/getTasks", authentificationWithToken, getTasks);
 
 //Route deleteTask : supprimer une tâche
+router.delete("/deleteTask/:id", authentificationWithToken, deleteTask);
 
 module.exports = router;

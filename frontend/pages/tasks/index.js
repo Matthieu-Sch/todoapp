@@ -32,9 +32,30 @@ export default function Tasks() {
     fetchTasks();
   }, []);
 
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const response = await fetch(`${apiFetch}/deleteTask/${taskId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        // Mettre à jour la liste des tâches après suppression
+        setTasks((prevTasks) =>
+          prevTasks.filter((task) => task._id !== taskId)
+        );
+      } else if (!response.ok) {
+        console.error("Erreur API : ", await response.json());
+        return false;
+      } else {
+        console.error("Erreur lors de la suppression de la tâche.");
+      }
+    } catch (error) {}
+  };
   return (
     <div className="w-full">
-      <TaskList tasks={tasks} />
+      <TaskList tasks={tasks} onDelete={handleDeleteTask} />
     </div>
   );
 }

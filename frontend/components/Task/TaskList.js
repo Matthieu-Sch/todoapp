@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-export default function TaskList({ tasks }) {
+export default function TaskList({ tasks, onDelete }) {
   const router = useRouter();
 
   const handleNewTask = () => {
@@ -15,10 +15,15 @@ export default function TaskList({ tasks }) {
 
       {tasks.map((task, index) => (
         <div
-          className="w-[30%] mx-auto my-4 border border-red-600 p-2 rounded-b-2xl"
+          className="w-[30%] mx-auto my-4 border border-red-600 p-2 rounded-b-2xl relative"
           key={index}
         >
-          <FontAwesomeIcon icon={faXmark} />
+          <FontAwesomeIcon
+            icon={faXmark}
+            className="absolute right-2 cursor-pointer"
+            onClick={() => onDelete(task._id)}
+          />
+
           <div className="text-center">
             <div>{task.title}</div>
             <div>{task.description}</div>
