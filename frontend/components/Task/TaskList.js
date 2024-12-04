@@ -1,38 +1,39 @@
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-export default function TaskList() {
-  const apiFetch = "http://localhost:3000/tasks";
-  const token = "RYJYtw5ByEqVEtxZ2WiwU_kXaqd7Ncu7";
-  const [tasks, setTasks] = useState([]);
+export default function TaskList({ tasks }) {
+  const router = useRouter();
 
-  const fetchTasks = async () => {
-    const response = await fetch(`${apiFetch}/getTasks`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to fetch the tasks");
-    }
-    const data = await response.json();
-    console.log(data);
-    setTasks(data.tasks);
+  const handleNewTask = () => {
+    router.push("tasks/new");
   };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   return (
     <div>
-      <h2>Tasks</h2>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task._id}>{task.title}</li>
-        ))}
-      </ul>
+      <h2 className="my-4 text-center">Vos tâches</h2>
+
+      {tasks.map((task, index) => (
+        <div
+          className="w-[30%] mx-auto my-4 border border-red-600 p-2 rounded-b-2xl"
+          key={index}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+          <div className="text-center">
+            <div>{task.title}</div>
+            <div>{task.description}</div>
+          </div>
+        </div>
+      ))}
+
+      <div className="w-[30%] m-auto text-center">
+        <button
+          className="border border-red-950 p-2 rounded-xl"
+          onClick={() => handleNewTask()}
+        >
+          Ajouter une nouvelle tâche
+        </button>
+      </div>
     </div>
   );
 }

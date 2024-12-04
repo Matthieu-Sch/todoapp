@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import Head from "next/head";
 import Layout from "../components/Layout/Layout";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
 function App({ Component, pageProps }) {
   return (

@@ -1,15 +1,56 @@
-export default function TaskForm() {
+import { useState } from "react";
+
+export default function TaskForm({ onAddTask }) {
+  // Gestion de l'état des input
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  // Gestion de l'ajout d'une tâche via l'inverse data flow
+  const handleSubmit = async (e) => {
+    // Empêche le rechargement de la page
+    e.preventDefault();
+    const newTask = { title, description };
+    console.log("Tâche bien envoyé : ", newTask);
+    // Vérification du champs title
+    if (!title.trim()) {
+      alert("Le champs 'Nom de la tâche' est obligatoire");
+      return;
+    }
+
+    const success = await onAddTask(newTask);
+    if (success) {
+      setTitle("");
+      setDescription("");
+    } else {
+      alert("Erreur lors de l'ajout d'une tâche");
+    }
+  };
+
   return (
-    <div>
-      <form>
-        <div className="flex flex-col items-center">
+    <form onSubmit={handleSubmit}>
+      <div className="flex flex-col items-center mb-2">
+        <div className="flex flex-col mb-2">
           <label className="text-center mb-4 pb-2">Nom de la tâche</label>
-          <input className="w-80 text-white border-b-2 border-l-2 bg-gray-950 rounded-lg bg-transparent focus:outline-none px-2" />
-          <span className="m-3"></span>
-          <label className="text-center mb-4">Description</label>
-          <textarea className="w-80 h-28 text-white border-b-2 border-l-2 bg-gray-950 rounded-lg bg-transparent focus:outline-none px-2" />
+          <input
+            className="w-80 text-black border border-pink-950 bg-transparent focus:outline-none p-2 rounded-lg"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
-      </form>
-    </div>
+        <div className="flex flex-col mb-2">
+          <label className="text-center mb-4">Description</label>
+          <textarea
+            className="w-80 h-44 text-black border border-pink-950 bg-transparent focus:outline-none p-2 rounded-lg"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="text-end">
+        <button type="submit" className="border border-red-950 p-2 rounded-xl">
+          Ajouter
+        </button>
+      </div>
+    </form>
   );
 }

@@ -5,7 +5,7 @@ const taskSchema = mongoose.Schema(
     // Création du champs "userId" qui fera référence à la table "users"
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     title: { type: String, required: true },
-    description: String,
+    description: { type: String, required: false },
     isCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }

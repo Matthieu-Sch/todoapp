@@ -10,7 +10,9 @@ const createTask = async (req, res) => {
 
     // Vérification du remplissage du titre et qu'il ne soit pas composé uniquement d'espace vide
     if (!title || !title.trim()) {
-      res.json(messages.noTitle);
+      return res
+        .status(400)
+        .json({ error: 'Le champs "Nom de la tâche est obligatoire".' });
     }
 
     // Création de la tâche
@@ -22,7 +24,10 @@ const createTask = async (req, res) => {
 
     // Sauvegarde de la tâche
     await newTask.save();
-    return res.json({ ...messages.taskCreateSuccessfully, task: newTask });
+    return res.status(201).json({
+      message: "Tâche créée avec succès.",
+      task: newTask,
+    });
   } catch (error) {
     console.error("Error creating task:", error.message);
     return res.json(messages.catchError);
