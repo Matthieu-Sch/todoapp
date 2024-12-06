@@ -7,15 +7,14 @@ export default function TaskForm({ onAddTask }) {
 
   // Gestion de l'ajout d'une tâche via l'inverse data flow
   const handleSubmit = async (e) => {
-    // Empêche le rechargement de la page
-    e.preventDefault();
-    const newTask = { title, description };
-    console.log("Tâche bien envoyé : ", newTask);
     // Vérification du champs title
     if (!title.trim()) {
       alert("Le champs 'Nom de la tâche' est obligatoire");
       return;
     }
+
+    const newTask = { title, description };
+    console.log("Tâche bien envoyé : ", newTask);
 
     const success = await onAddTask(newTask);
     if (success) {
