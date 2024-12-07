@@ -8,61 +8,72 @@ const uid2 = require("uid2");
 const signup = async (req, res) => {
   try {
     const { email, username, password, confirmPassword } = req.body;
-    // Création du regex pour l'email
-    const emailRegexp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    console.log("Données reçues :", req.body);
 
-    // Création du regex pour le mot de passe
+    const emailRegexp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordRegexp =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
 
-    const signupFields = { email, username, password, confirmPassword };
+    const signupFields = { email, password, confirmPassword };
 
-    // Vérification du remplissage des champs
+    // Vérification des champs vides
     if (checkEmptyFields(signupFields)) {
-      console.log("Au moins un champs est vide.");
+      console.log("Champs vides détectés :", signupFields);
       return res.json(messages.signupEmptyFields);
     }
 
+    // Validation regex
     if (!emailRegexp.test(email)) {
       return res.json(messages.emailRegex);
     }
-
     if (!passwordRegexp.test(password)) {
       return res.json(messages.passwordRegex);
     }
 
-    // Vérification de l'existance de l'email
+    // Vérification de l'existence de l'email
     const emailExists = await User.findOne({ email });
+    console.log("Email existe :", emailExists);
     if (emailExists) {
       return res.json(messages.emailAlreadyUsed);
     }
-    // Vérification de l'existance du username
+
+    // Vérification de l'existence du username
     const usernameExists = await User.findOne({ username });
+    console.log("Username existe :", usernameExists);
     if (usernameExists) {
       return res.json(messages.usernameAlreadyUsed);
     }
 
-    // Vérification de la concordance des 2 mots de passe
+    // Vérification de la concordance des mots de passe
     if (password !== confirmPassword) {
       return res.json(messages.passwordMatch);
     }
 
-    // Hashage du mot de passe via bcrypt
+    // Hashage du mot de passe
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     // Création de l'utilisateur
-    const newUser = await new User({
+    const newUser = new User({
       email,
       username,
       password: hashedPassword,
       token: uid2(32),
     });
 
-    await newUser.save();
+    // Sauvegarde de l'utilisateur
+    try {
+      await newUser.save();
+      console.log("Utilisateur enregistré :", newUser);
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement :", error.message);
+      return res
+        .status(500)
+        .json({ message: "Erreur lors de l'enregistrement de l'utilisateur." });
+    }
+
     res.json({ ...messages.signupSuccess, token: newUser.token });
   } catch (error) {
-    // Gestion des erreurs inattendues
-    console.error("Error during signup:", error.message);
+    console.error("Erreur inattendue :", error.message);
     res.status(500).json(messages.catchError);
   }
 };

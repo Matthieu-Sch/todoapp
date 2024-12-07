@@ -1,29 +1,49 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 
-export default function AuthForm({ mode, onSignin }) {
+export default function AuthForm({ mode, onSignup }) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [successSignup, setSuccessSignup] = useState("");
 
-  const handleSubmit = async () => {
-    if (!email.trim() || !password.trim()) {
+  const handleSignup = async (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page
+    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
       alert("Veuillez remplir tous les champs !");
       return;
     }
 
-    const success = await onSignin(user);
+    if (password !== confirmPassword) {
+      alert("Attention : vos mots de passe ne correspondent pas.");
+      return;
+    }
+    const newUser = { email, password, confirmPassword };
+    const success = await onSignup(newUser);
     if (success) {
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
+      setSuccessSignup("Félicitations, votre compte à bien été créé.");
+
+      setTimeout(() => {
+        router.push("/tasks");
+      }, 3000);
     } else {
       alert("Erreur lors de la connexion.");
     }
   };
 
+  const handleLogin = async () => {};
+
   return (
     <div className="w-full">
       <h3 className="text-center text-5xl my-6">Connexion</h3>
-      <form onSubmit={handleSubmit} className="flex my-4">
+      <form
+        onSubmit={mode === "login" ? handleLogin : handleSignup}
+        className="flex my-4"
+      >
         <div className="w-[40%] mx-auto border border-pink-600 px-2 py-8 rounded-lg flex flex-col justify-center items-center gap-5">
           <div className="w-full flex flex-col items-center mb-4">
             <label className="mb-2">E-mail</label>
@@ -53,8 +73,13 @@ export default function AuthForm({ mode, onSignin }) {
                 placeholder="Confirmer votre mot de passe"
                 className="w-3/4 p-2 rounded-md focus:outline-none"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.confirmPassword)}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               ></input>
+            </div>
+          )}
+          {successSignup && (
+            <div className="border border-green-950 bg-green-500 p-3 rounded-md">
+              <p className="text-green-950">{successSignup}</p>
             </div>
           )}
           <div>

@@ -3,7 +3,7 @@ import TaskForm from "../../components/Task/TaskForm";
 
 export default function NewTask() {
   const apiFetch = "http://localhost:3000/tasks";
-  const token = "RYJYtw5ByEqVEtxZ2WiwU_kXaqd7Ncu7";
+  // const token = "RYJYtw5ByEqVEtxZ2WiwU_kXaqd7Ncu7";
 
   const router = useRouter();
 

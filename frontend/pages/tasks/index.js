@@ -3,9 +3,8 @@ import { useState, useEffect } from "react";
 
 export default function Tasks() {
   const apiFetch = "http://localhost:3000/tasks";
-  const token = "RYJYtw5ByEqVEtxZ2WiwU_kXaqd7Ncu7";
   const [tasks, setTasks] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {

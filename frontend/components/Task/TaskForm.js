@@ -6,7 +6,8 @@ export default function TaskForm({ onAddTask }) {
   const [description, setDescription] = useState("");
 
   // Gestion de l'ajout d'une tâche via l'inverse data flow
-  const handleSubmit = async (e) => {
+  const handleSubmitTask = async (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page
     // Vérification du champs title
     if (!title.trim()) {
       alert("Le champs 'Nom de la tâche' est obligatoire");
@@ -26,7 +27,7 @@ export default function TaskForm({ onAddTask }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmitTask}>
       <div className="flex flex-col items-center mb-2">
         <div className="flex flex-col mb-2">
           <label className="text-center mb-4 pb-2">Nom de la tâche</label>
