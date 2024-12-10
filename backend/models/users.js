@@ -11,8 +11,7 @@ const userSchema = mongoose.Schema(
       lowercase: true,
     },
     password: { type: String, required: true, trim: true },
-    token: String,
-    createdAt: { type: Date, default: Date.now },
+    token: { type: String },
   },
   { timestamps: true }
 );

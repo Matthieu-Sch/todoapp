@@ -7,21 +7,28 @@ export default function AuthForm({ mode, onSignup }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [successSignup, setSuccessSignup] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isConnected, setIsConnected] = useState(true);
 
   const handleSignup = async (e) => {
     e.preventDefault(); // Empêche le rechargement de la page
-    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
-      alert("Veuillez remplir tous les champs !");
+    if (
+      !email.trim() ||
+      !password.trim() ||
+      (mode === "signup" && !confirmPassword.trim())
+    ) {
+      setErrorMessage("Veuillez remplir tous les champs !");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Attention : vos mots de passe ne correspondent pas.");
+      setErrorMessage("Attention : vos mots de passe ne correspondent pas.");
       return;
     }
     const newUser = { email, password, confirmPassword };
-    const success = await onSignup(newUser);
-    if (success) {
+    console.log(newUser);
+    const result = await onSignup(newUser);
+    if (result.success) {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -29,9 +36,11 @@ export default function AuthForm({ mode, onSignup }) {
 
       setTimeout(() => {
         router.push("/tasks");
-      }, 3000);
+        setIsConnected(true);
+      }, 2000);
     } else {
-      alert("Erreur lors de la connexion.");
+      setErrorMessage(result.message);
+      setIsConnected(false);
     }
   };
 
@@ -48,7 +57,7 @@ export default function AuthForm({ mode, onSignup }) {
           <div className="w-full flex flex-col items-center mb-4">
             <label className="mb-2">E-mail</label>
             <input
-              type="email"
+              // type="email"
               placeholder="Veuillez saisir votre e-mail"
               className="w-3/4 p-2 rounded-md focus:outline-none"
               value={email}
@@ -75,6 +84,11 @@ export default function AuthForm({ mode, onSignup }) {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               ></input>
+            </div>
+          )}
+          {errorMessage && (
+            <div className="border border-red-950 bg-red-500 p-3 rounded-md transition-opacity duration-1000">
+              <p className="text-red-950">{errorMessage}</p>
             </div>
           )}
           {successSignup && (

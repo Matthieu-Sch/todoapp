@@ -4,12 +4,6 @@ require("dotenv").config();
 // Importe le module Express pour créer et configurer le serveur
 const express = require("express");
 
-// Importe le module Mongoose pour intéragir avec une base de données MongoDB
-const mongoose = require("mongoose");
-
-// Création d'une instance de l'application Express
-const app = express();
-
 // Importe le module path pour travailler avec les chemins de fichiers
 const path = require("path");
 
@@ -23,10 +17,13 @@ const logger = require("morgan");
 const indexRouter = require("./routes/index");
 
 // Importe le routeur userRouter
-const userRouter = require("./routes/users");
+const usersRouter = require("./routes/users");
 
 // Importe le routeur userRouter
-const taskRouter = require("./routes/tasks");
+const tasksRouter = require("./routes/tasks");
+
+// Création d'une instance de l'application Express
+const app = express();
 
 // Importe et utilise cors pour autoriser les requêtes cross-origin (utile si ton frontend est sur un domaine différent)
 const cors = require("cors");
@@ -53,10 +50,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 
 //Utilise le routeur pour les routes avec l'extension "/user"
-app.use("/user", userRouter);
+app.use("/users", usersRouter);
 
 //Utilise le routeur pour les routes avec l'extension "/tasks"
-app.use("/tasks", taskRouter);
+app.use("/tasks", tasksRouter);
 
 // Exporte l'application pour l'utiliser dans d'autres fichiers (comme server.js)
 module.exports = app;

@@ -7,74 +7,85 @@ const uid2 = require("uid2");
 // Création de la logique d'inscription
 const signup = async (req, res) => {
   try {
-    const { email, username, password, confirmPassword } = req.body;
+    const { email, password, confirmPassword } = req.body;
     console.log("Données reçues :", req.body);
 
     const emailRegexp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordRegexp =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
 
-    const signupFields = { email, password, confirmPassword };
-
     // Vérification des champs vides
-    if (checkEmptyFields(signupFields)) {
-      console.log("Champs vides détectés :", signupFields);
-      return res.json(messages.signupEmptyFields);
+    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+      console.log("Champs vides détectés");
+      return res
+        .status(400)
+        .json({ message: "Tous les champs sont obligatoires." });
     }
 
-    // Validation regex
+    // Validation du format de l'email
     if (!emailRegexp.test(email)) {
-      return res.json(messages.emailRegex);
+      console.log("Email invalide :", email);
+      return res.status(400).json({ message: "L'email n'est pas valide." });
     }
+
+    // Validation du format du mot de passe
     if (!passwordRegexp.test(password)) {
-      return res.json(messages.passwordRegex);
+      console.log("Mot de passe invalide :", password);
+      return res.status(400).json({
+        message:
+          "Le mot de passe doit contenir entre 8 et 16 caractères, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      console.log(
+        "Les mots de passes de correspondent pas : ",
+        password,
+        " ",
+        confirmPassword
+      );
+      res
+        .statut(400)
+        .json({
+          message: "Attention : vos mots de passe ne correspondent pas.",
+        });
     }
 
     // Vérification de l'existence de l'email
     const emailExists = await User.findOne({ email });
-    console.log("Email existe :", emailExists);
     if (emailExists) {
-      return res.json(messages.emailAlreadyUsed);
-    }
-
-    // Vérification de l'existence du username
-    const usernameExists = await User.findOne({ username });
-    console.log("Username existe :", usernameExists);
-    if (usernameExists) {
-      return res.json(messages.usernameAlreadyUsed);
+      console.log("Email existe déjà :", email);
+      return res.status(409).json({ message: "Cet email est déjà utilisé." });
     }
 
     // Vérification de la concordance des mots de passe
     if (password !== confirmPassword) {
-      return res.json(messages.passwordMatch);
+      console.log("Les mots de passe ne correspondent pas.");
+      return res
+        .status(400)
+        .json({ message: "Les mots de passe ne correspondent pas." });
     }
 
     // Hashage du mot de passe
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    // Création de l'utilisateur
     const newUser = new User({
       email,
-      username,
       password: hashedPassword,
       token: uid2(32),
     });
 
     // Sauvegarde de l'utilisateur
-    try {
-      await newUser.save();
-      console.log("Utilisateur enregistré :", newUser);
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement :", error.message);
-      return res
-        .status(500)
-        .json({ message: "Erreur lors de l'enregistrement de l'utilisateur." });
-    }
+    await newUser.save();
+    console.log("Utilisateur enregistré :", newUser);
 
-    res.json({ ...messages.signupSuccess, token: newUser.token });
+    res.status(201).json({
+      message: "Utilisateur créé avec succès.",
+      token: newUser.token,
+    });
   } catch (error) {
     console.error("Erreur inattendue :", error.message);
-    res.status(500).json(messages.catchError);
+    res.status(500).json({ message: "Une erreur interne est survenue." });
   }
 };
 

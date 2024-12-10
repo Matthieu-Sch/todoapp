@@ -1,7 +1,7 @@
 import AuthForm from "../../components/Authform";
 
 export default function Signup() {
-  const apiFetch = "http://localhost:3000/user";
+  const apiFetch = "http://localhost:3000/users";
 
   const signup = async (user) => {
     try {
@@ -14,14 +14,14 @@ export default function Signup() {
         body: JSON.stringify(user),
       });
       if (!response.ok) {
-        console.error("Erreur API : ", await response.json());
-        return false; // Retourne false en cas d'erreur
+        // Récupère le message d'erreur du backend
+        const errorData = await response.json();
+        return { success: false, message: errorData.message };
       }
-      return true;
+      return { success: true };
     } catch (error) {
       console.log(error);
-      alert("Connexion impossible.");
-      return false;
+      return { success: false, message: "Connexion impossible." };
     }
   };
   return (
