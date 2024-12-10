@@ -44,11 +44,9 @@ const signup = async (req, res) => {
         " ",
         confirmPassword
       );
-      res
-        .statut(400)
-        .json({
-          message: "Attention : vos mots de passe ne correspondent pas.",
-        });
+      res.statut(400).json({
+        message: "Attention : vos mots de passe ne correspondent pas.",
+      });
     }
 
     // Vérification de l'existence de l'email
@@ -77,7 +75,7 @@ const signup = async (req, res) => {
 
     // Sauvegarde de l'utilisateur
     await newUser.save();
-    console.log("Utilisateur enregistré :", newUser);
+    console.log("Utilisateur enregistré :", newUser.token);
 
     res.status(201).json({
       message: "Utilisateur créé avec succès.",

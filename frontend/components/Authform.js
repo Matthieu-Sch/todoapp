@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../reducers/auth";
 
 export default function AuthForm({ mode, onSignup }) {
   const router = useRouter();
+  const dispatch = useDispatch();
+  // const token = useSelector((state) => state.auth.token);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [successSignup, setSuccessSignup] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isConnected, setIsConnected] = useState(true);
 
   const handleSignup = async (e) => {
     e.preventDefault(); // Empêche le rechargement de la page
@@ -28,19 +31,20 @@ export default function AuthForm({ mode, onSignup }) {
     const newUser = { email, password, confirmPassword };
     console.log(newUser);
     const result = await onSignup(newUser);
+    console.log("Résultat complet de onSignup : ", result);
     if (result.success) {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
       setSuccessSignup("Félicitations, votre compte à bien été créé.");
+      console.log("Token utilisateur : ", result.success);
+      dispatch(login({ token: result.token }));
 
       setTimeout(() => {
         router.push("/tasks");
-        setIsConnected(true);
       }, 2000);
     } else {
       setErrorMessage(result.message);
-      setIsConnected(false);
     }
   };
 
