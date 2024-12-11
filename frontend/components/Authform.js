@@ -3,24 +3,25 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../reducers/auth";
 
-export default function AuthForm({ mode, onSignup }) {
+export default function AuthForm({ mode, onSignup, onSignin }) {
   const router = useRouter();
   const dispatch = useDispatch();
   // const token = useSelector((state) => state.auth.token);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [successSignup, setSuccessSignup] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault(); // Empêche le rechargement de la page
+    // Vérifie si les champs sont bien remplis
     if (
       !email.trim() ||
       !password.trim() ||
       (mode === "signup" && !confirmPassword.trim())
     ) {
-      setErrorMessage("Veuillez remplir tous les champs !");
+      setErrorMessage("Veuillez remplir tous les champs.");
       return;
     }
 
@@ -31,13 +32,14 @@ export default function AuthForm({ mode, onSignup }) {
     const newUser = { email, password, confirmPassword };
     console.log(newUser);
     const result = await onSignup(newUser);
+    console.log(result);
     console.log("Résultat complet de onSignup : ", result);
     if (result.success) {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-      setSuccessSignup("Félicitations, votre compte à bien été créé.");
-      console.log("Token utilisateur : ", result.success);
+      setErrorMessage("");
+      setSuccessMessage("Félicitations, votre compte à bien été créé.");
       dispatch(login({ token: result.token }));
 
       setTimeout(() => {
@@ -48,7 +50,30 @@ export default function AuthForm({ mode, onSignup }) {
     }
   };
 
-  const handleLogin = async () => {};
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page
+    // Vérifie si les champs sont bien remplis
+    if (!email.trim() || !password.trim()) {
+      setErrorMessage("Veuillez remplir tous les champs.");
+      return;
+    }
+    const user = { email, password };
+    console.log(user);
+    const result = await onSignin(user);
+    if (result.success) {
+      setEmail("");
+      setPassword("");
+      setErrorMessage("");
+      setSuccessMessage("Connexion réussie !");
+      dispatch(login({ token: result.token }));
+
+      setTimeout(() => {
+        router.push("/tasks");
+      }, 2000);
+    } else {
+      setErrorMessage(result.message);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -95,9 +120,9 @@ export default function AuthForm({ mode, onSignup }) {
               <p className="text-red-950">{errorMessage}</p>
             </div>
           )}
-          {successSignup && (
+          {successMessage && (
             <div className="border border-green-950 bg-green-500 p-3 rounded-md">
-              <p className="text-green-950">{successSignup}</p>
+              <p className="text-green-950">{successMessage}</p>
             </div>
           )}
           <div>

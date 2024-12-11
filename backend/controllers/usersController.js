@@ -4,15 +4,15 @@ const { checkEmptyFields } = require("../modules/checkEmptyFields");
 const bcrypt = require("bcrypt");
 const uid2 = require("uid2");
 
+const emailRegexp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRegexp =
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+
 // Création de la logique d'inscription
 const signup = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
     console.log("Données reçues :", req.body);
-
-    const emailRegexp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const passwordRegexp =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
 
     // Vérification des champs vides
     if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -71,6 +71,7 @@ const signup = async (req, res) => {
       email,
       password: hashedPassword,
       token: uid2(32),
+      tokenExpiration: new Date(Date.now() * 24 * 60 * 60 * 1000),
     });
 
     // Sauvegarde de l'utilisateur
@@ -92,28 +93,37 @@ const signin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const signinFields = { email, password };
-
     // Vérification du remplissage des champs
-    if (checkEmptyFields(signinFields)) {
-      return res.json(messages.signinEmptyFields);
+    if (!email.trim() || !password.trim()) {
+      return res
+        .status(400)
+        .json({ message: "Veuillez remplir tous les champs !" });
+    }
+
+    // Validation du format de l'email
+    if (!emailRegexp.test(email)) {
+      console.log("Email invalide");
+      return res.status(400).json({ message: "L'email n'est pas valide." });
     }
 
     // Vérification de l'existance de l'utilisateur
     const userExists = await User.findOne({ email });
     if (!userExists) {
-      return res.json(messages.errorSignin);
+      return res.status(400).json({ message: "Identifiants invalides" });
     }
 
     const isPasswordValid = bcrypt.compareSync(password, userExists.password);
     if (!isPasswordValid) {
-      return res.json(messages.errorSignin);
+      return res.status(400).json({ message: "Identifiants invalides" });
     }
 
     // Création d'un nouveau token
-    userExists.token = uid2(32);
+    const token = uid2(32);
+    userExists.token = token;
     userExists.save();
-    return res.json({ ...messages.signinSuccess, token: userExists.token });
+    return res
+      .status(200)
+      .json({ message: "Connexion réussie !", token: userExists.token });
   } catch (error) {
     console.error("Error during signin:", error.message);
     res.status(500).json(messages.catchError);
