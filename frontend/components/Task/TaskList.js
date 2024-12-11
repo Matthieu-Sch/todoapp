@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 export default function TaskList({ tasks, onDelete }) {
   const router = useRouter();
@@ -10,6 +11,10 @@ export default function TaskList({ tasks, onDelete }) {
   };
 
   const chunkTasks = (tasks, chunkSize) => {
+    if (!Array.isArray(tasks)) {
+      console.error("Les tâches ne sont pas un tableau :", tasks);
+      return [];
+    }
     const result = [];
     for (let i = 0; i < tasks.length; i += chunkSize) {
       result.push(tasks.slice(i, i + chunkSize));
@@ -21,20 +26,20 @@ export default function TaskList({ tasks, onDelete }) {
   return (
     <div>
       <h2 className="my-4 text-center text-5xl">Vos tâches</h2>
-      {tasks.length === 0 ? (
+      {!tasks || tasks.length === 0 ? (
         <div className="text-center mb-4">
           <p>Vous n'avez aucune tâche.</p>
         </div>
       ) : (
         <div className="flex gap-4">
           {groupedTasks.map((group, columnIndex) => (
-            <div key={columnIndex} className="flex flex-col">
+            <div key={columnIndex} className="flex flex-col w-full">
               {group.map((task, index) => (
                 <div
                   className={
                     groupedTasks.length === 1
-                      ? "w-[30%] mx-auto my-4 border border-red-600 p-2 rounded-b-2xl relative"
-                      : "w-[85%] mx-auto my-4 border border-red-600 p-2 rounded-b-2xl relative"
+                      ? "w-[50%] mx-auto my-4 border border-red-600 p-2 rounded-b-2xl relative"
+                      : "w-[80%] mx-auto my-4 border border-red-600 p-2 rounded-b-2xl relative"
                   }
                   key={index}
                 >

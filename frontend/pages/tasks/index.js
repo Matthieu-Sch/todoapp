@@ -1,8 +1,10 @@
 import TaskList from "../../components/Task/TaskList";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export default function Tasks() {
   const apiFetch = "http://localhost:3000/tasks";
+  const token = useSelector((state) => state.auth.token);
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState("");
 
@@ -21,7 +23,7 @@ export default function Tasks() {
         }
         const data = await response.json();
         console.log(data.tasks);
-        setTasks(data.tasks);
+        setTasks(data.tasks || []);
         console.log(tasks);
       } catch (error) {
         setError(error.message);

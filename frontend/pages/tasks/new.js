@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import TaskForm from "../../components/Task/TaskForm";
+import { useSelector } from "react-redux";
 
 export default function NewTask() {
-  const apiFetch = "http://localhost:3000/tasks";
-  // const token = "RYJYtw5ByEqVEtxZ2WiwU_kXaqd7Ncu7";
-
   const router = useRouter();
+  const apiFetch = "http://localhost:3000/tasks";
+  const token = useSelector((state) => state.auth.token);
 
   const handleAddTask = async (task) => {
     try {

@@ -69,7 +69,7 @@ export default function AuthForm({ mode, onSignup, onSignin }) {
 
       setTimeout(() => {
         router.push("/tasks");
-      }, 2000);
+      }, 1000);
     } else {
       setErrorMessage(result.message);
     }
