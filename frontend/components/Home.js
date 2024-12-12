@@ -1,11 +1,13 @@
 function Home() {
   return (
-    <div className="w-full flex flex-col justify-center text-center">
-      <h1 className="text-4xl font-bold text-pink-950 mb-4">
+    <div className="min-h-[80vh] bg-gray-50 flex flex-col justify-center items-center px-6">
+      <h1 className="text-5xl font-extrabold text-red-600 mb-4 drop-shadow-lg">
         Welcome to Todo App
       </h1>
-      <p className="text-lg text-gray-700 mb-6">
-        Une application pour organiser vos tâches facilement et efficacement !
+
+      <p className="text-lg text-gray-700 mb-6 text-center max-w-xl leading-relaxed">
+        Organisez vos tâches facilement et efficacement avec une interface
+        simple et moderne conçue pour répondre à vos besoins quotidiens.
       </p>
     </div>
   );

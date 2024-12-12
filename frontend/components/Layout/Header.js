@@ -21,19 +21,25 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-slate-400 px-12 py-6 flex items-center justify-between">
-      <h1>Todo App</h1>
+    <header className="bg-red-600 px-8 py-4 flex items-center justify-between shadow-md">
+      {/* Titre de l'application */}
+      <h1 className="text-white text-2xl font-bold tracking-wide">Todo App</h1>
+
+      {/* Navigation */}
       <nav>
         {!isConnected ? (
-          <ul className="flex w-44 justify-between ">
+          <ul className="flex gap-4">
+            {/* Bouton Signin */}
             <li
-              className="text-pink-100 border border-l-pink-100 py-2 px-4 rounded-lg bg-pink-950 cursor-pointer"
+              className="bg-white text-red-600 border border-red-600 py-2 px-4 rounded-md cursor-pointer hover:bg-red-600 hover:text-white transition duration-300"
               onClick={() => handleLogin()}
             >
               Signin
             </li>
+
+            {/* Bouton Signup */}
             <li
-              className="border border-gray-600 py-2 px-4 rounded-lg cursor-pointer"
+              className="bg-white text-red-600 border border-red-600 py-2 px-4 rounded-md cursor-pointer hover:bg-red-600 hover:text-white transition duration-300"
               onClick={() => handleSignup()}
             >
               Signup
@@ -41,8 +47,9 @@ export default function Header() {
           </ul>
         ) : (
           <ul>
+            {/* Bouton Déconnexion */}
             <li
-              className="border border-gray-600 py-2 px-4 rounded-lg cursor-pointer"
+              className="bg-white text-red-600 border border-red-600 py-2 px-4 rounded-md cursor-pointer hover:bg-red-600 hover:text-white transition duration-300"
               onClick={() => handleLogout()}
             >
               Déconnexion

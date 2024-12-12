@@ -33,7 +33,7 @@ export default function NewTask() {
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full flex items-center justify-center min-h-[80vh] bg-red-100">
       <TaskForm onAddTask={handleAddTask} />
     </div>
   );

@@ -71,7 +71,7 @@ const signup = async (req, res) => {
       email,
       password: hashedPassword,
       token: uid2(32),
-      tokenExpiration: new Date(Date.now() * 24 * 60 * 60 * 1000),
+      tokenExpiration: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
     // Sauvegarde de l'utilisateur

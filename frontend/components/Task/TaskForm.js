@@ -15,7 +15,7 @@ export default function TaskForm({ onAddTask }) {
     }
 
     const newTask = { title, description };
-    console.log("Tâche bien envoyé : ", newTask);
+    // console.log("Tâche bien envoyé : ", newTask);
 
     const success = await onAddTask(newTask);
     if (success) {
@@ -27,27 +27,55 @@ export default function TaskForm({ onAddTask }) {
   };
 
   return (
-    <form onSubmit={handleSubmitTask}>
-      <div className="flex flex-col items-center mb-2">
-        <div className="flex flex-col mb-2">
-          <label className="text-center mb-4 pb-2">Nom de la tâche</label>
+    <form
+      onSubmit={handleSubmitTask}
+      className="bg-white shadow-lg shadow-black rounded-lg p-8 w-full max-w-md mx-auto"
+    >
+      <h2 className="text-center text-3xl font-bold text-gray-800 mb-6">
+        Ajouter une tâche
+      </h2>
+
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
+          <label
+            htmlFor="task-title"
+            className="text-gray-700 font-medium mb-2"
+          >
+            Nom de la tâche
+          </label>
           <input
-            className="w-80 text-black border border-pink-950 bg-transparent focus:outline-none p-2 rounded-lg"
+            id="task-title"
+            type="text"
+            placeholder="Entrez le nom de la tâche"
+            className="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:outline-none transition"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <div className="flex flex-col mb-2">
-          <label className="text-center mb-4">Description</label>
+
+        <div className="flex flex-col">
+          <label
+            htmlFor="task-description"
+            className="text-gray-700 font-medium mb-2"
+          >
+            Description
+          </label>
           <textarea
-            className="w-80 h-44 text-black border border-pink-950 bg-transparent focus:outline-none p-2 rounded-lg"
+            id="task-description"
+            placeholder="Entrez la description de la tâche"
+            className="w-full p-3 h-32 border rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:outline-none transition resize-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          />
+          ></textarea>
         </div>
       </div>
-      <div className="text-end">
-        <button type="submit" className="border border-red-950 p-2 rounded-xl">
+
+      {/* Bouton pour soumettre */}
+      <div className="mt-6 text-center">
+        <button
+          type="submit"
+          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow hover:bg-red-700 transition duration-300"
+        >
           Ajouter
         </button>
       </div>
