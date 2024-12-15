@@ -43,9 +43,6 @@ app.use(express.urlencoded({ extended: false }));
 // Utilise cookie-parser pour gérer les cookies dans les requêtes
 app.use(cookieParser());
 
-// Sert les fichiers statiques depuis le dossier "public"
-app.use(express.static(path.join(__dirname, "public")));
-
 // Utilise le routeur pour les routes à la racine ("/")
 app.use("/", indexRouter);
 
